@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Kayako - Twitter Challenge</title>
+    <meta name="generator" content="Bootply" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+
+<script type="text/javascript" src="../static/pace.min.js"></script>
+<link href="../static/pace.corner.css" rel="stylesheet" />
+
+</head>
+<body>
+  <div class="container">
+      <div class="row">
+          <div class="col s12">
+              <h1>Kayako Twitter Challenge</h1>
+          </div>
+      </div>
+      <hr>
+  </div>
+  <script type="text/javascript" src="../static/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/1.1.7/jquery.linkify.min.js"></script>
+
+  <script type="text/javascript">
+  /** The lowest tweet ID which has been displayed **/
+
+  var t = {{tweets |tojson }}
+  var lowestTweetId = t[t.length -1].id
+  console.log(lowestTweetId)
+  /** Count of total tweets displayed on the page **/
+  var count = 0;
+
+  /** Template of the tweet div that will be appended **/
+  var tweetTemplate = '\
+  <div class="col s6">\
+    <div class="card small horizontal">\
+      <div class="card-stacked">\
+        <div class="card-content">\
+        <p class="tweet"></p>\
+        </div>\
+        <div class="card-action">\
+        <span>\
+        <img src="" alt="User Profile Image" class="profile circle responsive-img">\
+        <p class= "name"></p>\
+        <p class= "time"></p>\
+        </span>\
+        </div>\
+      </div>\
+    </div>\
+  </div>'
+
+  /**
+   * Function to fetch tweets asynchronously from the API
+   *
+   * @callback requestCallback
+   * @param none
+   */
+  function getTweets(callback) {
+    console.log("Chalu")
+      $.ajax({
+          type: 'GET',
+          url: 'fetch',
+          data: {'max_id': lowestTweetId},    /** Lowest id present on page **/
+          dataType: 'json',
+          success: function(data) {
+              console.log("Here? ")
+
+              /** Updated lowestTweetId to ID of the last tweet fetched **/
+              lowestTweetId = data.tweets[data.tweets.length - 1].id;
+              console.log('Lowest ID: ' + lowestTweetId);
+              /** Fire the callback **/
+              callback(data.tweets);
+              console.log(data.tweets);
+              statuses = data.tweets;
+          }
+      });
+  }
+
+  /**
+   * Function to display the fetched tweets
+   *
+   * @param {array} statuses contains array of tweet objects
+   */
+  function displayTweets(statuses) {
+      /** Iterate through all the tweets **/
+      $.each(statuses, function(index, tweet) {
+        console.log(tweet.text);
+          /** Create a new bootstrap row div after every 2 tweets displayed **/
+          if (count % 2 == 0) {
+              var div = $("<div/>", {'class': 'row'});
+              $(".container").append(div);    /** Add row div at the end **/
+          }
+
+          var time = moment(tweet.time).fromNow();
+          var tweetDiv = $(tweetTemplate);
+          tweetDiv.find('.tweet').html(tweet.text);
+          tweetDiv.find('.name').html(tweet.name);
+
+          tweetDiv.find('.time').html(time);
+          tweetDiv.find('.profile').attr("src", tweet.image);
+
+
+          $('p').linkify();
+          $(".row").last().append(tweetDiv);
+          count++;
+      });
+  }
+
+  /**
+   * Fired when the page is loaded
+   */
+  $(document).ready(function() {
+    console.log("Yep fired");
+      /** Fetch and display the tweets **/
+      getTweets(displayTweets);
+
+  });
+
+  /**
+   * Fetch more tweets if the page is scrolled to bottom
+   */
+  $(window).scroll(function() {
+      if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+          /** Fetch and display the tweets **/
+          getTweets(displayTweets);
+      }
+  });
+
+  </script>
+
+</body>
+
+
+</html>
