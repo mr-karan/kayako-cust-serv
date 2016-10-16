@@ -9,26 +9,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
 
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
-
-<script type="text/javascript" src="../static/pace.min.js"></script>
 <link href="../static/pace.corner.css" rel="stylesheet" />
 
 </head>
 <body>
   <div class="container">
       <div class="row">
-          <div class="col s12">
-              <h1>Kayako Twitter Challenge</h1>
-          </div>
+            <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">  Kayako Twitter Challenge
+</a>
+
+    </div>
+  </nav>
+
       </div>
-      <hr>
   </div>
   <script type="text/javascript" src="../static/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/1.1.7/jquery.linkify.min.js"></script>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+
+<script type="text/javascript" src="../static/pace.min.js"></script>
 
   <script type="text/javascript">
   /** The lowest tweet ID which has been displayed **/
@@ -41,18 +46,16 @@
 
   /** Template of the tweet div that will be appended **/
   var tweetTemplate = '\
-  <div class="col s6">\
+  <div class="col s12 m6 l4">\
     <div class="card small horizontal">\
       <div class="card-stacked">\
         <div class="card-content">\
         <p class="tweet"></p>\
         </div>\
         <div class="card-action">\
-        <span>\
         <img src="" alt="User Profile Image" class="profile circle responsive-img">\
-        <p class= "name"></p>\
-        <p class= "time"></p>\
-        </span>\
+        <span class="grey-text text-darken-4 name">\</span>\
+        <span class= "time"></span>\
         </div>\
       </div>\
     </div>\
@@ -95,7 +98,7 @@
       $.each(statuses, function(index, tweet) {
         console.log(tweet.text);
           /** Create a new bootstrap row div after every 2 tweets displayed **/
-          if (count % 2 == 0) {
+          if (count % 3 == 0) {
               var div = $("<div/>", {'class': 'row'});
               $(".container").append(div);    /** Add row div at the end **/
           }

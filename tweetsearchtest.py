@@ -55,7 +55,7 @@ while tweetCount < maxTweets:
             print("No more tweets found")
             break
         tweet = new_tweets[0]
-        print(tweet.entities)
+        print((tweet.entities['urls']))
         tweetCount += len(new_tweets)
         print("Downloaded {0} tweets".format(tweetCount))
         max_id = new_tweets[-1].id
