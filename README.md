@@ -14,10 +14,9 @@
 - Visit `http://localhost:8000`
 
 ### See it in action:
-![screen1](screenshots/screen1.png)
-
 ![screen2](screenshots/screen2.png)
 
+![screen1](screenshots/screen1.png)
 
 ### License
 > MIT © Karan Sharma
