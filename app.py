@@ -4,6 +4,8 @@ from flask import Flask, render_template, jsonify, request
 from twitter import TwitterAPI
 
 app = Flask(__name__)
+
+# Instantiate ``api`` object to setup authentication for Twitter API.
 api = TwitterAPI()
 
 @app.route('/')
@@ -13,6 +15,7 @@ def index():
 
 @app.route('/load')
 def load():
+    # Get the lowest tweet id on that page from AJAX request.
     max_id = request.args.get('max_id')
     return jsonify(tweets = api.fetch_tweets(max_id))
 
