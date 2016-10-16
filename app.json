@@ -1,0 +1,20 @@
+{
+  "name": "kayako-custserv",
+  "description": "#custserv tweets with RT Count >=1",
+  "repository": "https://github.com/mr-karan/kayako-cust-serv",
+  "keywords": ["python", "twitter", "kayako"],
+  "env": {
+    "TWITTER_CONSUMER_KEY": {
+      "required": true
+    },
+    "TWITTER_CONSUMER_SECRET": {
+      "required": true
+    },
+    "TWITTER_ACCESS_TOKEN": {
+      "required": true
+    },
+    "TWITTER_ACCESS_SECRET": {
+      "required": true
+    }
+  }
+}
