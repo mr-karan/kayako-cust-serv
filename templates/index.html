@@ -32,9 +32,7 @@
   <script type="text/javascript">
 
   var tweets = {{tweets |tojson }}
-  var lowestTweetId = tweets[tweets.length -1].id
-  var count = 0;
-
+  var max_id = tweets[tweets.length -1].id
   var card = '\
   <div class="col s6">\
     <div class="card small horizontal">\
@@ -52,28 +50,29 @@
     </div>\
   </div>'
 
+  var tweetcount = 0;
   /* Load Tweets Asynchronously from `app.py` */
-  function load(callback) {
+  function load(result) {
       $.ajax({
-          type: 'GET',
           url: 'load',
-          data: {'max_id': lowestTweetId},    /** Lowest id present on page **/
+          data: {'max_id': max_id},
           dataType: 'json',
+          type: 'GET',
           success: function(data) {
-              lowestTweetId = data.tweets[data.tweets.length - 1].id;
-              console.log('Lowest ID: ' + lowestTweetId);
-              callback(data.tweets);
-              console.log(data.tweets);
-              statuses = data.tweets;
+              max_id = data.tweets[data.tweets.length - 1].id;
+              result(data.tweets);
+              tweets = data.tweets;
           }
       });
   }
 
-  function displayCard(statuses) {
-      $.each(statuses, function(index, tweet) {
-          if (count % 2 == 0) {
-              var div = $("<div/>", {'class': 'row'});
-              $(".container").append(div);
+  function displayCard(tweets) {
+    // Iterate through all tweets, prepend data in HTML card.
+      $.each(tweets, function(index, tweet) {
+          if (tweetcount % 2 == 0) {
+            // 3 cards per row.
+              var closediv = $("<div/>", {'class': 'row'});
+              $(".container").append(closediv);
           }
 
           var time = moment(tweet.time).fromNow();
@@ -82,9 +81,10 @@
           tweetDiv.find('.name').html(tweet.name);
           tweetDiv.find('.time').html(time);
           tweetDiv.find('.profile').attr("src", tweet.image);
+          // Convert plain text links to html formatted urls.
           $('p').linkify();
           $(".row").last().append(tweetDiv);
-          count++;
+          tweetcount++;
       });
   }
 
@@ -93,9 +93,9 @@
 
   });
 
+// Infinite Scrolling, load more tweets when scrollbar is triggered
   $(window).scroll(function() {
       if ($(window).scrollTop() + $(window).height() == $(document).height()) {
-          /** Fetch and display the tweets **/
           load(displayCard);
       }
   });

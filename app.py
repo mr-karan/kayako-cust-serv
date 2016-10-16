@@ -10,7 +10,7 @@ api = TwitterAPI()
 
 @app.route('/')
 def index():
-    tweets = api.fetch_tweets()
+    tweets = api.fetch_tweets(max_id=-1)
     return render_template('index.html',tweets = tweets)
 
 @app.route('/load')
