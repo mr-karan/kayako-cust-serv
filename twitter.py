@@ -1,70 +1,45 @@
 #!/usr/bin/env python
 import tweepy
-import sys
-import jsonpickle
 import os
+from config import(consumer_key, consumer_secret,access_token,\
+                     access_token_secret )
 
+# Setup Twitter API Authentication. Get your keys from ``https://apps.twitter.com/app/new``
 
-consumer_key = 'hYowzLI0JAgay0RNdygkWR6lt'
-consumer_secret = 'cPWbxLbFbm4iiGHyHCPpI217OlKdW7syS50ixeL2fT8YGqahXz'
-access_token ='71795977-cOueHTRpue2lttRlKaa6KRCDneRjjVu3PfPBvcnhv'
-access_token_secret = '82ara22eJi8cwtD578jfFwq9Ka2Pg0qFJIXcUcnBIfem5'
+class TwitterAPI(object):
+    def __init__(self):
+        self.auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+        self.auth.set_access_token(access_token, access_token_secret)
+        self.api = tweepy.API(self.auth)
 
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
+    def fetch_tweets(self, max_id = -1):
+        result = []
+        querystring = '#custserv'  # Query parameter, to search in tweets.
+        max_tweets = 100           # 100 is the max Twitter API permits in one request.
+        max_id = int(max_id)       # max_id is obtained from `app.py`
 
-api = tweepy.API(auth)
-
-tweetCount = 0
-
-
-def get_tweets(max_id = -1, sinceId = None):
-    result = []
-    searchQuery = '#custserv'  # this is what we're searching for
-    tweetsPerQry = 100  # this is the max the API permits
-
-    max_id = int(max_id)
-    print("Twitter Max ID"+ str(max_id))
-    print(type(max_id))
-    sinceId = sinceId
-    try:
-        if (max_id <= 0):
-            if (not sinceId):
-                print("1")
-                new_tweets = api.search(q=searchQuery, count=tweetsPerQry)
+        try:
+            if max_id <= 0:
+                new_tweets = self.api.search(q=querystring, count=max_tweets)
             else:
-                print("2")
-                new_tweets = api.search(q=searchQuery, count=tweetsPerQry,
-                                        since_id=sinceId)
-        else:
-            if (not sinceId):
-                print("3")
-                new_tweets = api.search(q=searchQuery, count=tweetsPerQry,
+                new_tweets = self.api.search(q=querystring, count=max_tweets,
                                         max_id=str(max_id - 1))
-            else:
-                print("4")
-                new_tweets = api.search(q=searchQuery, count=tweetsPerQry,
-                                        max_id=str(max_id - 1),
-                                        since_id=sinceId)
-        if not new_tweets:
-            print("No more tweets found")
+            # In case no new tweets are found
+            if not new_tweets:
+                pass
+            # `result`
+            for tweet in new_tweets:
+                if tweet.retweet_count > 0:
+                    if tweet not in result:
+                        result.append(
+                        {'id':tweet.id,
+                        'text':tweet.text,
+                        'image':tweet.user.profile_image_url_https,
+                        'name':tweet.user.screen_name,
+                        'time':tweet.created_at}
+                        )
 
-        for tweet in new_tweets:
-            if tweet.retweet_count > 0:
-                print(tweet.id)
-                if tweet not in result:
-                    result.append(
-                    {'id':tweet.id,
-                    'text':tweet.text,
-                    'image':tweet.user.profile_image_url_https,
-                    'name':tweet.user.screen_name,
-                    'time':tweet.created_at}
-                    )
+        except tweepy.TweepError as e:
+            print("Error : " + str(e))
 
-
-        print(len(result))
-        #print("Downloaded {0} tweets".format(tweetCount))
-    except tweepy.TweepError as e:
-        # Just exit if any error
-        print("some error : " + str(e))
-    return result
+        return result

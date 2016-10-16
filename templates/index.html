@@ -1,86 +1,67 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>Kayako - Twitter Challenge</title>
     <meta name="generator" content="Bootply" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
     <link rel="stylesheet" href="../static/stylesheets/main.css">
-
-<link href="../static/pace.corner.css" rel="stylesheet" />
-
+    <link href="../static/stylesheets/pacetop.css" rel="stylesheet" />
 </head>
+
 <body>
-  <div class="container">
-      <div class="row">
+    <div class="container">
+        <div class="row">
             <nav>
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo center">  Kayako Twitter Challenge
-</a>
-
+                <div class="nav-wrapper">
+                    <a href="#" class="brand-logo center">  Kayako Twitter Challenge</a>
+                </div>
+            </nav>
+        </div>
     </div>
-  </nav>
 
-      </div>
-  </div>
-  <script type="text/javascript" src="../static/jquery-2.1.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/1.1.7/jquery.linkify.min.js"></script>
-  <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
-
-<script type="text/javascript" src="../static/pace.min.js"></script>
+  <script type="text/javascript" src="../static/js/pace.min.js"></script>
 
   <script type="text/javascript">
-  /** The lowest tweet ID which has been displayed **/
 
-  var t = {{tweets |tojson }}
-  var lowestTweetId = t[t.length -1].id
-  console.log(lowestTweetId)
-  /** Count of total tweets displayed on the page **/
+  var tweets = {{tweets |tojson }}
+  var lowestTweetId = tweets[tweets.length -1].id
   var count = 0;
 
-  /** Template of the tweet div that will be appended **/
-  var tweetTemplate = '\
-  <div class="col s12 m6 l4">\
+  var card = '\
+  <div class="col s6">\
     <div class="card small horizontal">\
       <div class="card-stacked">\
         <div class="card-content">\
         <p class="tweet"></p>\
         </div>\
         <div class="card-action">\
+        <span class="card-title grey-text text-darken-4"><p class= "name"></p>\
         <img src="" alt="User Profile Image" class="profile circle responsive-img">\
-        <span class="grey-text text-darken-4 name">\</span>\
+        </span>\
         <span class= "time"></span>\
         </div>\
       </div>\
     </div>\
   </div>'
 
-  /**
-   * Function to fetch tweets asynchronously from the API
-   *
-   * @callback requestCallback
-   * @param none
-   */
-  function getTweets(callback) {
-    console.log("Chalu")
+  /* Load Tweets Asynchronously from `app.py` */
+  function load(callback) {
       $.ajax({
           type: 'GET',
-          url: 'fetch',
+          url: 'load',
           data: {'max_id': lowestTweetId},    /** Lowest id present on page **/
           dataType: 'json',
           success: function(data) {
-              console.log("Here? ")
-
-              /** Updated lowestTweetId to ID of the last tweet fetched **/
               lowestTweetId = data.tweets[data.tweets.length - 1].id;
               console.log('Lowest ID: ' + lowestTweetId);
-              /** Fire the callback **/
               callback(data.tweets);
               console.log(data.tweets);
               statuses = data.tweets;
@@ -88,59 +69,38 @@
       });
   }
 
-  /**
-   * Function to display the fetched tweets
-   *
-   * @param {array} statuses contains array of tweet objects
-   */
-  function displayTweets(statuses) {
-      /** Iterate through all the tweets **/
+  function displayCard(statuses) {
       $.each(statuses, function(index, tweet) {
-        console.log(tweet.text);
-          /** Create a new bootstrap row div after every 2 tweets displayed **/
-          if (count % 3 == 0) {
+          if (count % 2 == 0) {
               var div = $("<div/>", {'class': 'row'});
-              $(".container").append(div);    /** Add row div at the end **/
+              $(".container").append(div);
           }
 
           var time = moment(tweet.time).fromNow();
-          var tweetDiv = $(tweetTemplate);
+          var tweetDiv = $(card);
           tweetDiv.find('.tweet').html(tweet.text);
           tweetDiv.find('.name').html(tweet.name);
-
           tweetDiv.find('.time').html(time);
           tweetDiv.find('.profile').attr("src", tweet.image);
-
-
           $('p').linkify();
           $(".row").last().append(tweetDiv);
           count++;
       });
   }
 
-  /**
-   * Fired when the page is loaded
-   */
   $(document).ready(function() {
-    console.log("Yep fired");
-      /** Fetch and display the tweets **/
-      getTweets(displayTweets);
+      load(displayCard);
 
   });
 
-  /**
-   * Fetch more tweets if the page is scrolled to bottom
-   */
   $(window).scroll(function() {
       if ($(window).scrollTop() + $(window).height() == $(document).height()) {
           /** Fetch and display the tweets **/
-          getTweets(displayTweets);
+          load(displayCard);
       }
   });
 
   </script>
 
 </body>
-
-
 </html>

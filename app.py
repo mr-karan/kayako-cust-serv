@@ -1,28 +1,25 @@
 import sys
-import json
-import pprint
-import argparse
+from flask import Flask, render_template, jsonify, request
 
-from flask import Flask, make_response, render_template, jsonify, send_from_directory,request
-
-from twitter import get_tweets
+from twitter import TwitterAPI
 
 app = Flask(__name__)
+api = TwitterAPI()
 
 @app.route('/')
 def index():
-    s = get_tweets()
-    return render_template('index.html',tweets = s)
+    tweets = api.fetch_tweets()
+    return render_template('index.html',tweets = tweets)
 
-
-@app.route('/fetch')
-def more():
+@app.route('/load')
+def load():
     max_id = request.args.get('max_id')
-    print("Max ID: "+str(max_id))
-    return jsonify(tweets = get_tweets(max_id))
+    return jsonify(tweets = api.fetch_tweets(max_id))
 
 
 def main():
     app.run(host="0.0.0.0", port=8000, debug=True)
+
+
 if __name__ == '__main__':
     sys.exit(main())
