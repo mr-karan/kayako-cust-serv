@@ -68,14 +68,14 @@
 
   function displayCard(tweets) {
     // Iterate through all tweets, prepend data in HTML card.
-      $.each(tweets, function(index, tweet) {
-          if (tweetcount % 2 == 0) {
-            // 3 cards per row.
+      $.each(tweets, function(i, tweet) {
+          var time = moment(tweet.time).fromNow();
+
+          if (tweetcount % 2 == 0)  // 3 cards per row.
+          {
               var closediv = $("<div/>", {'class': 'row'});
               $(".container").append(closediv);
           }
-
-          var time = moment(tweet.time).fromNow();
           var tweetDiv = $(card);
           tweetDiv.find('.tweet').html(tweet.text);
           tweetDiv.find('.name').html(tweet.name);
@@ -90,7 +90,6 @@
 
   $(document).ready(function() {
       load(displayCard);
-
   });
 
 // Infinite Scrolling, load more tweets when scrollbar is triggered
@@ -99,7 +98,6 @@
           load(displayCard);
       }
   });
-
   </script>
 
 </body>
