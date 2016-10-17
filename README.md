@@ -22,9 +22,10 @@ Publicly Accesible URL: https://kayako-custserv.herokuapp.com/
 
 
 ### See it in action:
-![screen2](screenshots/screen2.png)
 
 ![screen1](screenshots/screen1.png)
+
+![screen2](screenshots/screen2.png)
 
 ### License
 > MIT © Karan Sharma
