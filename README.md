@@ -3,7 +3,7 @@
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 > View all tweets with #custserv and RT count >=1.
 
-Publicly Accesible URL: https://kayako-custserv.herokuapp.com/
+Publicly Accessible URL: https://kayako-custserv.herokuapp.com/
 
 ### Instructions :
 
