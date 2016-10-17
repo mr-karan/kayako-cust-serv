@@ -34,7 +34,7 @@
   var tweets = {{tweets |tojson }}
   var max_id = tweets[tweets.length -1].id
   var card = '\
-  <div class="col s6">\
+  <div class="col s12 m6 l4">\
     <div class="card small horizontal">\
       <div class="card-stacked">\
         <div class="card-content">\
@@ -71,7 +71,7 @@
       $.each(tweets, function(i, tweet) {
           var time = moment(tweet.time).fromNow();
 
-          if (tweetcount % 2 == 0)  // 3 cards per row.
+          if (tweetcount % 3 == 0)  // 3 cards per row.
           {
               var closediv = $("<div/>", {'class': 'row'});
               $(".container").append(closediv);

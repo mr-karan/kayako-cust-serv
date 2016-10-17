@@ -3,7 +3,7 @@
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 > View all tweets with #custserv and RT count >=1.
 
-https://kayako-custserv.herokuapp.com/
+Publicly Accesible URL: https://kayako-custserv.herokuapp.com/
 
 ### Instructions :
 
@@ -14,6 +14,12 @@ https://kayako-custserv.herokuapp.com/
 - Create a new app at https://apps.twitter.com/app/new and export token in your `.bashrc` or `.zshrc` or any shell you use. Check `config.py` for more info.
 - `python app.py`
 - Visit `http://localhost:8000`
+
+### Dependencies:
+
+-  Flask
+-  Tweepy
+
 
 ### See it in action:
 ![screen2](screenshots/screen2.png)
